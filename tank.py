@@ -1,4 +1,7 @@
+import json
+
 class Tank(): 
+    id = ""
     ph = 0 #pipe height
     pd = 0 #pipe diameter
     pa = 0 #pipe area
@@ -10,24 +13,13 @@ class Tank():
     ro = 0 #content density
     kf = 0 #friction coefficient
     x = 0.0 #current heigt
+    tx = []
 
-    def __init__(self, ph, pd, th, td, ro, kf, x):
-        self.ph = ph
-        self.pd = pd
-        self.th = th
-        self.td = td
+    def __init__(self, ro, kf):
         self.ro = ro
         self.kf = kf
-        if x<0:
-            x=0
-        elif x > ph + th:
-            x = ph + th
-        self.x = x
-        self.pa = 3.1415*self.pd*self.pd/4
-        self.pv = self.pa*self.ph
-        self.ta = 3.1415*self.td*self.td/4
-        self.tv = self.ta * self.th
-
+        self.tx = []
+        
     def sts(self):
         if self.x <0:
             return -1 #empty
@@ -83,25 +75,53 @@ class Tank():
             qx = x - self.th - self.ph
             x = self.th+self.ph
         self.x = x
+        self.tx.append(x)
         return qx
-        
-    def der(self, dx, tp, pp):
-        # tp + 0.5*ro*tv^2 + ro*g*(x+dx) = pp + 0.5*ro*(1+kf*ph/pd)pv^2
-        # pa*pv = ta*tv => pv = ta*tv/pa
-        # tp + 0.5*ro*tv^2 + ro*g*(x+dx) = pp + 0.5*ro*(1+kf*ph/pd)*ta^2*tv^2/pa^2 
-        # 0.5*ro*(1 - (1+kf*ph/pd)*ta^2/pa^2)*tv^2 = pp - tp - ro*g*(x+dx)
-        # tv^2 = 2*[(tp-pp)/ro + g*(x+dx)]/[(1+kf*ph/pd)*ta^2/pa^2-1]
-        sts = self.sts()
-        dn = 1.0
-        if sts==0:
-            dn = self.kf*(self.x+dx)/self.pd
-        elif sts>0:
-            ph = (1+self.kf*self.ph/self.pd)
-            rt = self.ta/self.pa
-            dn = ph*rt*rt-1
 
-        dc = [(tp-pp)/self.ro + 9.8*(self.x + dx)]/dn
-        if dc >0:
-            return sqrt(2*dc)
-        else:
-            return 0
+    def import_data(self,data):
+        self.id = data.get("id","")
+        self.ph = data.get("pipeheight",0.1)
+        self.pd = data.get("pipediameter",0.05)
+        self.th = data.get("tankheight",0.1)
+        self.td = data.get("tankdiameter",1.0)
+        x = data.get("level",0)
+        if x<0:
+            x=0
+        elif x > self.ph + self.th:
+            x = self.ph + self.th
+        self.x = x
+        self.pa = 3.1415*self.pd*self.pd/4
+        self.pv = self.pa*self.ph
+        self.ta = 3.1415*self.td*self.td/4
+        self.tv = self.ta * self.th
+
+    def export_data(self):
+        dat ={}
+        dat["id"] = self.id
+        dat["pipeheight"] = self.ph
+        dat["pipediameter"] = self.pd
+        dat["tankheight"] = self.th
+        dat["tankdiameter"] = self.td
+        dat["level"] = self.x
+        dat["pipearea"] = self.pa
+        dat["pipevolume"] = self.pv
+        dat["tankarea"] = self.ta
+        dat["tankvolume"] = self.tv
+        return dat
+
+    def __str__(self):
+        dat = self.export_data()
+        return json.dumps(dat)
+
+    def set_graph(self, t, lt, ax_inf):
+        ax_inf.cla()
+        ax_inf.set_title('Tank height')
+        ax_inf.set_xlabel('time')
+        ax_inf.set_ylabel('m')
+        ax_inf.set_xlim([0,t])
+        ax_inf.axhline(y=self.ph, color='r', linestyle='-')
+        ax_inf.axhline(y=self.th+self.ph, color='b', linestyle='-')
+        ax_inf.set_ylim([0,self.th+self.ph+0.1])
+        ax_inf.plot(lt,self.tx,label=self.id)
+        ax_inf.legend(loc='upper left')
+        ax_inf.grid(True)

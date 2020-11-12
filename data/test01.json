@@ -1,0 +1,36 @@
+{
+    "parameters":{
+        "density":1000.0,
+        "friction":0.001,
+        "pressure":101325.0,
+        "increment":0.005,
+        "intervals":5000,
+        "spill":"true"
+    },
+    "tanks":[
+        {"id":"a",
+            "pipeheight": 2.1,
+            "pipediameter": 0.05,
+            "tankheight": 1.0,
+            "tankdiameter": 1.0,
+            "level":2.5},
+        {"id":"b",
+            "pipeheight": 0.1,
+            "pipediameter": 0.05,
+            "tankheight": 1.0,
+            "tankdiameter": 1.0,
+            "level":0.0},
+        {"id":"c",
+            "pipeheight": 0.1,
+            "pipediameter": 0.05,
+            "tankheight": 1.0,
+            "tankdiameter": 1.0,
+            "level":1.0},
+        {"id":"d",
+            "pipeheight": 1.0,
+            "pipediameter": 0.05,
+            "tankheight": 0.05,
+            "tankdiameter": 1.0,
+            "level":1.0}
+    ]
+}
