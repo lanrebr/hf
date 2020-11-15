@@ -1,7 +1,7 @@
 import json
 
 class Tank(): 
-    id = ""
+    id = "" # tank id
     ph = 0 #pipe height
     pd = 0 #pipe diameter
     pa = 0 #pipe area
@@ -13,13 +13,19 @@ class Tank():
     ro = 0 #content density
     kf = 0 #friction coefficient
     x = 0.0 #current heigt
-    tx = []
+    x0 = 0.0 #initial hight
+    px = 0.0 # horizontal position
+    py = 0.0 # verical position
 
     def __init__(self, ro, kf):
         self.ro = ro
         self.kf = kf
-        self.tx = []
+        self.init()
         
+    def init(self):
+        self.tx = []
+        self.x = self.x0
+
     def sts(self):
         if self.x <0:
             return -1 #empty
@@ -84,16 +90,19 @@ class Tank():
         self.pd = data.get("pipediameter",0.05)
         self.th = data.get("tankheight",0.1)
         self.td = data.get("tankdiameter",1.0)
+        self.px = data["positionx"]
+        self.py = data["positiony"]
         x = data.get("level",0)
         if x<0:
             x=0
         elif x > self.ph + self.th:
             x = self.ph + self.th
-        self.x = x
+        self.x0 = x
         self.pa = 3.1415*self.pd*self.pd/4
         self.pv = self.pa*self.ph
         self.ta = 3.1415*self.td*self.td/4
         self.tv = self.ta * self.th
+        self.init()
 
     def export_data(self):
         dat ={}
@@ -107,6 +116,8 @@ class Tank():
         dat["pipevolume"] = self.pv
         dat["tankarea"] = self.ta
         dat["tankvolume"] = self.tv
+        dat["positionx"]=self.px
+        dat["positiony"]=self.py
         return dat
 
     def __str__(self):

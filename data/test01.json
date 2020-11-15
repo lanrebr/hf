@@ -5,7 +5,8 @@
         "pressure":101325.0,
         "increment":0.005,
         "intervals":5000,
-        "spill":"true"
+        "spill":"true",
+        "zoom":6
     },
     "tanks":[
         {"id":"a",
@@ -13,24 +14,36 @@
             "pipediameter": 0.05,
             "tankheight": 1.0,
             "tankdiameter": 1.0,
-            "level":2.5},
+            "level":2.5,
+            "positionx":1,
+            "positiony":3.5
+        },
         {"id":"b",
             "pipeheight": 0.1,
             "pipediameter": 0.05,
-            "tankheight": 1.0,
+            "tankheight": 1.5,
             "tankdiameter": 1.0,
-            "level":0.0},
+            "level":0.0,
+            "positionx":2.1,
+            "positiony":3.5
+        },
         {"id":"c",
             "pipeheight": 0.1,
             "pipediameter": 0.05,
-            "tankheight": 1.0,
+            "tankheight": 1.5,
             "tankdiameter": 1.0,
-            "level":1.0},
+            "level":1.5,
+            "positionx":3.5,
+            "positiony":2.5
+        },
         {"id":"d",
             "pipeheight": 1.0,
             "pipediameter": 0.05,
             "tankheight": 0.05,
             "tankdiameter": 1.0,
-            "level":1.0}
+            "level":0.8,
+            "positionx":4.6,
+            "positiony":2.5
+        }
     ]
 }

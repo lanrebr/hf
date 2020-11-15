@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block app_content %}
+    <h2>Scenarios</h2>
+    <ul>
+    {% for file in files %}
+    <li><a href="scenario/{{file}}">{{file}}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}
